@@ -4,7 +4,7 @@ const Services = require('../Services');
 const async = require('async');
 const utils = require('../Utils'); 
 const plugins = require('../Plugins');
-const fs = require ('fs');
+const fs = require ('fs-extra');
 var Path = require ('path');
 
 module.exports = {
@@ -334,6 +334,15 @@ module.exports = {
                     }      
                    
             } )
+            },
+            function(cb)
+            {
+                var templatepath = Path.join(__dirname, '../emailTemplates/');
+                fs.copy(templatepath + 'changePassword.html', templatepath + 'newfile.html', err => {
+                    if (err) return console.error(err)
+                    console.log('success!')
+                  })
+                cb();
             },
             function(cb)
             {
