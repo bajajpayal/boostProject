@@ -12,9 +12,9 @@ module.exports=[
 		{
 			Controllers.users.signUp(request.payload,(err,data)=>
 				{
+					var res;
 					if(err)
 						{
-							console.log(err,"erorooror")
 							reply({
 		                        statusCode: 400,
 		                        status: "error",
@@ -22,26 +22,52 @@ module.exports=[
 		                    })
 						}
 						else{
-							reply({
-		                        statusCode: 200,
-		                        status: "success",
-		                        message: "SignUp successfully.",
-		                        result: {
-		                           	userData:data
-		                        }
-		                    })
+							const filename = request.payload.image.hapi.filename;
+							const path = __dirname + "/uploads/" + filename;
+							var file = fs.createWriteStream(path);
+							file.on('error' , (err)=>
+						{
+							console.log(err);
+						});
+						request.payload.image.pipe(file);
+						request.payload.image.on('end',(err)=>
+					{
+						 res = {
+							filename : "/uploads/"+request.payload.image.hapi.filename,
+							headers : request.payload.image.hapi.headers
+						}
+						console.log(res,"ress--------------------")
+						reply({
+							statusCode: 200,
+							status: "success",
+							message: "SignUp successfully.",
+							result : JSON.stringify(res)
+							
+						})
+					})
+					
 						}
 					})
 		},
 		config:{
 			tags:['api'],
 			description:'sign up api ',
+			payload: {
+				maxBytes:209715200,
+				output: 'stream',
+				parse: true,
+				allow: 'multipart/form-data'
+			},
 			validate:{
 				payload:{
 					name:Joi.string().required(),
 					password:Joi.string().min(6).max(20).required(),
 					email: Joi.string().required().lowercase().max(256).regex(/^([a-zA-Z0-9.])+\@(([a-zA-Z0-9])+\.)+([a-zA-Z0-9]{2,4})+$/),
-					phoneNo:Joi.number()
+					phoneNo:Joi.number(),
+					image: Joi.any()
+                    .meta({swaggerType: 'file'})
+                    .optional()
+                    .description('Image File')
 				},
 				failAction: function (request, reply, source, error){
 					reply('Enter valid email address');
