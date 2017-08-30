@@ -208,5 +208,117 @@ module.exports=[
 					}
 				});  
 			},
-		}
+		},
+		{
+			method:'GET',
+			path: '/users/getAllUsers',
+			config: {
+				description: 'API admin change password',
+				tags: ['api'],
+					plugins:{
+						'hapi-swagger':{
+							payloadType : 'form'
+						}
+					}
+			},
+			 handler: function (request, reply) {
+		
+					 Controllers.users.getAllUsers(request.payload, function(err, res) {
+						if (err) {
+							reply({
+								statusCode: 400,
+								status: "error",
+								message: err,
+								
+							})
+						} else {
+							reply({
+								statusCode: 200,
+								status: "success",
+								result : res
+							})
+						}
+					});  
+				},
+			},
+			{
+				method:'PUT',
+				path: '/users/updateUser',
+				config: {
+					description: 'API admin change password',
+					tags: ['api'],
+					validate:{
+						query : {
+							
+							Id : Joi.string().required()
+						},
+						payload : {
+							name: Joi.string()
+						}
+					},
+						plugins:{
+							'hapi-swagger':{
+								payloadType : 'form'
+							}
+						}
+				},
+				 handler: function (request, reply) {
+			
+						 Controllers.users.updateUser(request.query, request.payload ,function(err, res) {
+							if (err) {
+								reply({
+									statusCode: 400,
+									status: "error",
+									message: err,
+									
+								})
+							} else {
+								reply({
+									statusCode: 200,
+									status: "success",
+									result : res
+								})
+							}
+						});  
+					},
+				},
+
+				{
+					method:'DELETE',
+					path: '/users/deleteUserData',
+					config: {
+						description: 'API admin change password',
+						tags: ['api'],
+						validate:{
+							query : {								
+								Id : Joi.string().required()
+							}
+						},
+							plugins:{
+								'hapi-swagger':{
+									payloadType : 'form'
+								}
+							}
+					},
+					 handler: function (request, reply) {
+				
+							 Controllers.users.deleteUserData(request.query ,function(err, res) {
+								if (err) {
+									reply({
+										statusCode: 400,
+										status: "error",
+										message: err,
+										
+									})
+								} else {
+									reply({
+										statusCode: 200,
+										status: "success",
+										result : res
+									})
+								}
+							});  
+						},
+					},
+		
 ];

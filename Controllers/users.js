@@ -382,5 +382,41 @@ module.exports = {
                     callback(null,null);
                 }
         })
+    },
+
+    getAllUsers : function(data,callback)
+    {
+        Services.dbCommonServices.getData("users", { isDeleted : false }, {},{}, (err,result)=>
+        {
+            if(err)
+                callback(err)       
+                else{
+                    callback(null,result);
+                }      
+               
+        } )
+    },
+    updateUser : function(query ,payload ,  callback)
+    {
+        Services.dbCommonServices.findOneAndUpdateData("users",{_id : query.Id } , { $set : { name : payload.name }}, { lean: true } , (err,d)=>
+    {
+        if(err)
+            callback(err)       
+            else{
+                callback(null,"done");
+            }  
+    })
+    },
+
+    deleteUserData : function( query ,callback)
+    {
+        Services.dbCommonServices.findOneAndUpdateData("users",{_id : query.Id } , { $set : { isDeleted : true }}, { lean: true } , (err,d)=>
+        {
+            if(err)
+                callback(err)       
+                else{
+                    callback(null,"done");
+                }  
+        })
     }
 };
