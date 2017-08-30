@@ -4,7 +4,8 @@ const Services = require('../Services');
 const async = require('async');
 const utils = require('../Utils'); 
 const plugins = require('../Plugins');
-const fs = require ('fs');
+
+const fs = require ('fs-extra');
 var Path = require ('path');
 
 module.exports = {

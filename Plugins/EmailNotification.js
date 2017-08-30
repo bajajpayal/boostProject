@@ -22,13 +22,15 @@ var sendEmail = function(to,callback)
 
 transporter.sendMail(to,(err,done)=>
 {
-    if(err)
-        {
-            callback(err);
-        }
-        else{
-            callback(null,done);
-        }
+let mailOptions = {
+    from : 'bajaj.payal27@gmail.com',
+    to : to,
+    subject : 'Verification Email',
+    html: '<a href = "hello">hello world!</a>',
+    text: 'hello world!'
+    //body : 'Hi , please click on below mwntioned link to activate your account'
+};
+
 })
 }
 
